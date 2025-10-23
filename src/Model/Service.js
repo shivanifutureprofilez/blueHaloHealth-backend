@@ -9,17 +9,11 @@ const serviceSchema = new mongoose.Schema({
         type:String,
         required: [true,"Service name is required"]
     },
-    description1: {
-        type:String,
-        required:[true, "Description is required"],
-        minlength: [25, 'Address must be at least 25 characters long'],
-    },
-    description2:{
+    description: {
         type:String,
     },
-    provider: {
-        type:String,
-        required: [true, "Provider name is required"]
+    content: {
+        type:String
     },
     benefits: [
         {

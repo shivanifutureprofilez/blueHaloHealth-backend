@@ -4,22 +4,21 @@ exports.addNewService = (async (req, res) => {
     try {
         const { name,
                 bannerImg,
-                description1,
-                description2,
+                // description1,
+                // description2,
                 provider,
-                benefits,
-                agegroup } = req.body;
+                // benefits,
+                // agegroup 
+                } = req.body;
                 console.log("req.body" ,req.body)
 
-        if(!name || !bannerImg || !description1 || !provider  || !agegroup){
+        if(!name || !bannerImg  || !provider){
             res.json({
                 status:false,
                 message:"All fields required"
             })
         }
-
-        console.log("benefits benefits",benefits)
-        const result = new Service({name, bannerImg, description1, description2, provider, benefits, agegroup})
+        const result = new Service({name, bannerImg, provider})
         const data = await result.save();
         if(data?._id){
             res.json({
