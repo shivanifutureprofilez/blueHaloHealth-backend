@@ -51,13 +51,13 @@ exports.showServicesByAge = async (req, res) => {
       "agegroup"
     );
     if (serviceData && serviceData.length) {
-      res.json({
+      return res.status(201).json({
         allServices: serviceData,
         status: true,
         message: "Fetched All Services",
       });
     } else {
-      res.json({
+      return res.status(400).json({
         status: false,
         allServices: [],
         message: "Unable To fetch All Services",
@@ -65,7 +65,7 @@ exports.showServicesByAge = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.json({
+    return res.status(500).json({
       status: false,
       allServices: error || "",
       message: "Unable to fetch all services. Try again Later",
@@ -135,19 +135,19 @@ exports.updateService = async (req, res) => {
     });
     // console.log("service Data", serviceData);
     if (!serviceData) {
-      return res.json({
+      return res.status(400).json({
         status: false,
         message: "Unable To Update Service",
       });
     }
-    return res.json({
+    return res.status(200).json({
       status: true,
       message: "Successfully Updated Service",
       serviceData,
     });
   } catch (error) {
     console.error(error);
-    return res.json({
+    return res.status(500).json({
       status: false,
       message: "Unable To Update Service. Try Again Later.",
       error,
@@ -172,7 +172,7 @@ exports.deleteService = async (req, res) => {
       message: "Service Deleted Succesfully",
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       status: false,
       message: "Unable To Delete Service. Try Again Later.",
       error: error,
@@ -185,18 +185,18 @@ exports.showServiceDetails = async (req, res) => {
     const id = req.params.id;
     const serviceData = await Service.findById(id);
     if (!serviceData) {
-      res.json({
+      res.status(400).json({
         status: false,
         message: "Unable To Fetch Service Details",
       });
     }
-    res.json({
+    res.status(200).json({
       status: true,
       message: "Service Details Fetched Succesfully",
       serviceData: serviceData,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       status: false,
       error: error,
     });
