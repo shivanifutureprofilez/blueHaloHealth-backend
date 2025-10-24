@@ -1,46 +1,48 @@
 const Service = require("../Model/Service");
 
-exports.addNewService = (async (req, res) => {
-    try {
-        const { name,
-                bannerImg,
-                // description1,
-                // description2,
-                provider,
-                // benefits,
-                // agegroup 
-                } = req.body;
-                console.log("req.body" ,req.body)
+exports.addNewService = async (req, res) => {
+  try {
+    console.log("Hello");
+    console.log("req.body", req.body);
+    const { title, name, bannerImg, description, content, benefits } = req.body;
 
-        if(!name || !bannerImg  || !provider){
-            res.json({
-                status:false,
-                message:"All fields required"
-            })
-        }
-        const result = new Service({name, bannerImg, provider})
-        const data = await result.save();
-        if(data?._id){
-            res.json({
-                status:true,
-                message:"Service Added Successfully"
-            })
-        }
-        else{
-            res.json({
-                status:false,
-                message:"Unable To Add Service"
-            })
-        }
-    } catch (error) {
-        console.log("error ", error);
-        res.json({
-            status: false,
-            message: "Service Not Added. Something went wrong!!",
-            error: error
-        })
+    if (!name || !title) {
+      return res.status(400).json({
+        status: false,
+        message: "Name and title are required.",
+      });
     }
-});
+
+    const mappedBenefits = (benefits || []).map((b) => ({
+      title: b.name,
+      description: b.benefits,
+    }));
+
+    const newService = new Service({
+      name: title, 
+      description,
+      content,
+      benefits: mappedBenefits,
+      agegroup: name, 
+      bannerImg: bannerImg,
+    });
+
+    await newService.save();
+
+    return res.status(201).json({
+      status: true,
+      message: "Service added successfully.",
+      data: newService,
+    });
+  } catch (error) {
+    console.error("Error adding service:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Service not added. Something went wrong.",
+      error: error.message,
+    });
+  }
+};
 
 exports.showServicesByAge = (async (req, res) => {
     try {
@@ -74,7 +76,7 @@ exports.showServicesByAge = (async (req, res) => {
 exports.showAllServices = (async (req, res) => {
     try {
         const serviceData = await Service.find({}).populate('agegroup');
-            console.log("serviceData",serviceData)
+            // console.log("serviceData",serviceData)
         if(serviceData && serviceData.length){
             res.json({
                 allServices: serviceData,
@@ -111,7 +113,7 @@ exports.updateService = async (req, res) => {
       benefits,
       agegroup,
     } = req.body;
-    console.log("req.body" , req.body);
+    // console.log("req.body" , req.body);
     // if (!id || !serviceName || !bannerImg || !description1 || !provider || !benefits || !agegroup) {
     //   res.json({
     //     status: false,
@@ -119,15 +121,15 @@ exports.updateService = async (req, res) => {
     //   });
     // }
 
-    console.log("service id", id);
+    // console.log("service id", id);
     const SERVICE = await Service.findById(id)
-    console.log("service SERVICE", SERVICE);
+    // console.log("service SERVICE", SERVICE);
     const serviceData = await Service.findByIdAndUpdate(
       id,
       { serviceName, bannerImg, description1, description2, provider, agegroup , benefits}
       
     );
-    console.log("service Data", serviceData);
+    // console.log("service Data", serviceData);
     if (!serviceData) {
       return res.json({
         status: false,
