@@ -1,7 +1,10 @@
-const { contact } = require("../controller/contactController");
+const { contactAdd  ,contactList } = require("../controller/contactController");
+const router = require("./servicesRoutes");
 
 
-router.get("/contact", contact);
+router.post("/contact", contactAdd);
+router.get("/contact/list", contactList);
+
 
 
 module.exports = router;

@@ -1,22 +1,29 @@
 const Contact = require("../Model/Contact");
 
 
-exports.contact = (async (req, res) => {
+exports.contactAdd = (async (req, res) => {
     try {
+
+        console.log("req", req.body)
+        const { fullName, age, phone, email, message, smsCheckbox } = req.body;
+         if(!fullName || !age  || !email){
+          return  res.status(400).json({
+                status:false,
+                
+                message:"All fields required"
+            })
+        }
         const enquiry = new Contact({
-            fullName:"",
-            email:"",
-            phone:"",
-            message:""
+            fullName, age, phone, email, message, smsCheckbox
         })
         const result = await enquiry.save();
-        if(result){
+        if (result) {
             res.json({
                 status: true,
                 message: "Enquiry has been sent",
                 result: result
             })
-        } else { 
+        } else {
             res.json({
                 status: false,
                 message: "Unable To send enquiry.",
@@ -31,4 +38,32 @@ exports.contact = (async (req, res) => {
             error: error
         })
     }
+});
+
+exports.contactList = (async (req, res) => {
+    try {
+        const enquiryData = await Contact.find({})
+            console.log("enquiryData",enquiryData)
+        if(enquiryData && enquiryData.length){
+            res.json({
+                enquiryData: enquiryData,
+                status:true,
+                message:"Fetched All Contacts"
+            })
+        }
+        else{
+            res.json({
+                status:false,
+                enquiryData: [],
+                message: "Unable To fetch All Contacts"
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        res.json({
+            status:false,
+            enquiryData : error || '',
+            message: "Unable to fetch all Contacts. Try again Later"
+        })
+    } 
 });

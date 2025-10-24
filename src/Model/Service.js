@@ -31,6 +31,11 @@ const serviceSchema = new mongoose.Schema({
     }
 }, {timestamps :true}
 )
+
+serviceSchema.pre(/^find/, function(next) {
+  this.where({ deletedAt: { $exists: false } });
+  next();
+});
  
 
 const Service = mongoose.model('services',serviceSchema);

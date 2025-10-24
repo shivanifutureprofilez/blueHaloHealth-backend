@@ -1,17 +1,21 @@
 const mongoose = require('mongoose');
 
-var validateEmail = function(email) {
-    var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    return re.test(email)
-};
-const contactSchema = new mongoose.Schema({
+// var validateEmail = function(email) {
+//     var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+//     return re.test(email)
+// };
+const contactSchema = mongoose.Schema({
     fullName:{
         type:String,
-        required: [true, "Name is Required"]
+        required: [true, "Name is Required"],
+    },
+    age:{
+        type:Number,
+        required:[true, "Age is Required"],
     },
     email:{
         type:String,
-        required:[true, "email is required"],
+        required:[true, "Email is Required"],
         unique:true,
         lowercase:true,
         trim:true,
@@ -26,7 +30,10 @@ const contactSchema = new mongoose.Schema({
         type:String,
         min:10
     },
-    
+    smsCheckbox:{
+        type:Boolean,
+        default:true
+    }
 }, {timestamps :true})
 
 

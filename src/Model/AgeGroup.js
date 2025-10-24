@@ -18,5 +18,10 @@ const ageGroupSchema = mongoose.Schema({
 }, {timestamps :true}
 )
 
+ageGroupSchema.pre(/^find/, function(next) {
+  this.where({ deletedAt: { $exists: false } });
+  next();
+});
+
 const AgeGroup=mongoose.model("agegroups", ageGroupSchema)
 module.exports =AgeGroup;

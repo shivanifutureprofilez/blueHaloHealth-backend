@@ -17,11 +17,13 @@ require('./config');
 const ServiceRoutes = require("./routes/servicesRoutes");
 const AgeGroupRoutes = require("./routes/agesGroupRoutes");
 const UserRoutes = require("./routes/userRoutes");
+const ContactRoutes = require("./routes/contactRoutes");
 
 // app.use('/api', userRoutes);
 app.use('/api', ServiceRoutes);
 app.use('/api', AgeGroupRoutes);
 app.use('/api',UserRoutes);
+app.use('/api',ContactRoutes);
 
 
 app.get('/', (req, res) => {

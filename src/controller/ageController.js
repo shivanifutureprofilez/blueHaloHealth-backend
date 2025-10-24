@@ -109,7 +109,7 @@ exports.deleteAgeGroup = (async (req,res) => {
         }
         res.json({
             status:true,
-            message:"Successfully Deleted Age Group"
+            message:"Age Group has been removed successfully"
         })
     } catch (error) {
         res.json({
