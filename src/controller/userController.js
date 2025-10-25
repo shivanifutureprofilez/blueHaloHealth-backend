@@ -43,14 +43,14 @@ exports.login = (async (req, res) => {
         console.log("req.body",req.body)
         const { email, password } = req.body;
         if (!email || !password) {
-            res.json({
+            return res.status(400).json({
                 status: false,
                 message: "All fields are required!!"
             })
         }
         const user = await User.findOne({ email }).select("+password");
         if (!user) {
-            return res.json({
+            return res.status(400).json({
                 status: false,
                 message: "User Not Found"
             })
@@ -61,7 +61,7 @@ exports.login = (async (req, res) => {
             return res.status(400).json({ error: "Invalid email or password." });
         }
         const token = signToken(user._id);
-        res.status(200).json({
+        return res.status(200).json({
             "message": "User Logged In Succesfully",
             "user": actualUser,
             "token": token,
@@ -69,7 +69,7 @@ exports.login = (async (req, res) => {
         })
     } catch (error) {
         console.log(error)
-        res.json({
+        return res.status(500).json({
             status: false,
             message: "Unable To Login. Something Went Wrong",
             error: error
@@ -81,19 +81,19 @@ exports.login = (async (req, res) => {
 exports.myprofile = (async (req, res) => {
     try {
         if (req?.user) {
-            res.json({
+            return res.status(200).json({
                 status: true,
                 user: req?.user
             })
         } else { 
-            res.json({
+            return res.status(400).json({
                 status: false,
                 user: "Unauthencated"
             })
         }
     } catch (error) {
         console.log(error)
-        res.json({
+        return res.status(500).json({
             status: false,
             message: "Unauthencated",
         })
@@ -110,13 +110,13 @@ exports.register = (async (req, res) => {
         })
         const result = await user.save();
         if(result){
-            res.json({
+            return res.status(200).json({
                 status: true,
                 message: "User has been created",
                 result: result
             })
         } else { 
-            res.json({
+            return res.status(400).json({
                 status: false,
                 message: "Unable To register. Something Went Wrong",
                 error: result
@@ -124,7 +124,7 @@ exports.register = (async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        res.json({
+        return res.status(500).json({
             status: false,
             message: "Unable To Login. Something Went Wrong",
             error: error

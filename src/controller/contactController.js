@@ -9,7 +9,6 @@ exports.contactAdd = (async (req, res) => {
          if(!fullName || !age  || !email){
           return  res.status(400).json({
                 status:false,
-                
                 message:"All fields required"
             })
         }
@@ -18,13 +17,13 @@ exports.contactAdd = (async (req, res) => {
         })
         const result = await enquiry.save();
         if (result) {
-            res.json({
+            return res.status(200).json({
                 status: true,
                 message: "Enquiry has been sent",
                 result: result
             })
         } else {
-            res.json({
+            return res.status(400).json({
                 status: false,
                 message: "Unable To send enquiry.",
                 error: result
@@ -32,7 +31,7 @@ exports.contactAdd = (async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        res.json({
+        return res.status(500).json({
             status: false,
             message: "Unable To send enquiry. Something Went Wrong",
             error: error
@@ -45,14 +44,14 @@ exports.contactList = (async (req, res) => {
         const enquiryData = await Contact.find({})
             console.log("enquiryData",enquiryData)
         if(enquiryData && enquiryData.length){
-            res.json({
+            return res.status(200).json({
                 enquiryData: enquiryData,
                 status:true,
                 message:"Fetched All Contacts"
             })
         }
         else{
-            res.json({
+            return res.status(400).json({
                 status:false,
                 enquiryData: [],
                 message: "Unable To fetch All Contacts"
@@ -60,7 +59,7 @@ exports.contactList = (async (req, res) => {
         }
     } catch (error) {
         console.log(error)
-        res.json({
+        return res.status(500).json({
             status:false,
             enquiryData : error || '',
             message: "Unable to fetch all Contacts. Try again Later"
