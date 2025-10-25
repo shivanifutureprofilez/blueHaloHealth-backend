@@ -74,10 +74,9 @@ exports.getServicebyId = async (req, res) => {
 
 exports.showAllServices = async (req, res) => {
   try {
-    const serviceData = await Service.find({ deletedAt: null }).populate(
-      "agegroup"
-    );
-    // console.log("serviceData",serviceData)
+    console.log("Hello");
+    const serviceData = await Service.find({ deletedAt: null }).populate("agegroup");
+    // console.log("serviceData",serviceData);
     if (!serviceData) {
       return res.status(400).json({
         status: false,
@@ -91,7 +90,7 @@ exports.showAllServices = async (req, res) => {
       message: "Fetched All Services",
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     res.status(500).json({
       status: false,
       allServices: error || "",
