@@ -64,7 +64,7 @@ exports.getServicebyId = async (req, res) => {
       });
   } catch (error) {
     console.log(error);
-    res.json({
+    return res.status(500).json({
       status: false,
       allServices: error || "",
       message: "An error occured. Try again Later",
@@ -172,7 +172,7 @@ exports.deleteService = async (req, res) => {
       message: "Service Deleted Succesfully",
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       status: false,
       message: "Unable To Delete Service. Try Again Later.",
       error: error,
@@ -185,18 +185,18 @@ exports.showServiceDetails = async (req, res) => {
     const id = req.params.id;
     const serviceData = await Service.findById(id);
     if (!serviceData) {
-      res.json({
+      res.status(400).json({
         status: false,
         message: "Unable To Fetch Service Details",
       });
     }
-    res.json({
+    res.status(200).json({
       status: true,
       message: "Service Details Fetched Succesfully",
       serviceData: serviceData,
     });
   } catch (error) {
-    res.json({
+    res.status(500).json({
       status: false,
       error: error,
     });
