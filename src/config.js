@@ -10,7 +10,6 @@ mongoose.connect(process.env.MONGO_DB_URL, {
 })
 .then(() => {
    console.log('MongoDB connected successfully !!');
-   // console.log(process.env.MONGO_DB_URL)
 })
    .catch((err) => {
       console.error('MongoDB CONNECTION ERROR =>>: ', err);

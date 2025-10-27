@@ -43,7 +43,7 @@ exports.listAgeGroups = (async (req, res) => {
         //const list = await AgeGroup.find({ deletedAt: { $exists: true } });
         const list = await AgeGroup.find({ deletedAt: null })
             .populate('services');
-        console.log("list", list)
+        
         if (!list) {
             return res.status(400).json({
                 ageGroupList: [],

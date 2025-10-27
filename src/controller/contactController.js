@@ -4,7 +4,7 @@ const Contact = require("../Model/Contact");
 exports.contactAdd = (async (req, res) => {
     try {
 
-        console.log("req", req.body)
+        
         const { fullName, age, phone, email, message, smsCheckbox } = req.body;
          if(!fullName || !age  || !email){
           return  res.status(400).json({
@@ -42,7 +42,7 @@ exports.contactAdd = (async (req, res) => {
 exports.contactList = (async (req, res) => {
     try {
         const enquiryData = await Contact.find({})
-            console.log("enquiryData",enquiryData)
+            
         if(enquiryData && enquiryData.length){
             return res.status(200).json({
                 enquiryData: enquiryData,

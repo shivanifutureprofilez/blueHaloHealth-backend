@@ -21,7 +21,6 @@ exports.validateToken = async (req, res, next) => {
                 return res.status(403).json({ status: false, message: "Invalid or expired token" });
             }
             const user = await User.findById(decoded.userId);
-            // console.log("user", decoded)
             req.user = user;
             next();
         });
@@ -40,7 +39,7 @@ const signToken = (user_id) => {
 
 exports.login = (async (req, res) => {
     try {
-        console.log("req.body",req.body)
+        
         const { email, password } = req.body;
         if (!email || !password) {
             return res.status(400).json({
