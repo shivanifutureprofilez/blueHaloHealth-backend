@@ -74,9 +74,12 @@ exports.getServicebyId = async (req, res) => {
 
 exports.showAllServices = async (req, res) => {
   try {
-    console.log("Hello");
-    const serviceData = await Service.find({ deletedAt: null }).populate("agegroup");
-    // console.log("serviceData",serviceData);
+    const { age } = req.query;
+    const filter = { deletedAt: null };
+    if (age && age!="") {
+      filter.agegroup = age;
+    }
+    const serviceData = await Service.find(filter).populate("agegroup");
     if (!serviceData) {
       return res.status(400).json({
         status: false,
