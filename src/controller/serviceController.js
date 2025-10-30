@@ -72,6 +72,33 @@ exports.getServicebyId = async (req, res) => {
   }
 };
 
+exports.showFeaturedServices = async (req, res) => {
+  try {
+     
+    const serviceData = await Service.find({featured:1});
+    if (!serviceData) {
+      return res.status(400).json({
+        status: false,
+        allServices: [],
+        message: "Unable To fetch All Services",
+      });
+    }
+    res.status(200).json({
+      allServices: serviceData,
+      status: true,
+      message: "Fetched All Services",
+    });
+  } catch (error) {
+    // console.log(error);
+    res.status(500).json({
+      status: false,
+      allServices: error || "",
+      message: "Unable to fetch all services. Try again Later",
+    });
+  }
+};
+
+
 exports.showAllServices = async (req, res) => {
   try {
     const { age } = req.query;
@@ -177,6 +204,32 @@ exports.deleteService = async (req, res) => {
     res.status(500).json({
       status: false,
       message: "Unable To Delete Service. Try Again Later.",
+      error: error,
+    });
+  }
+};
+
+
+exports.featureService = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const serviceData = await Service.findByIdAndUpdate(_id);
+    serviceData.featured = serviceData?.featured == 1 ? 0 : 1 ;
+    serviceData.save();
+    if (!serviceData) {
+      return res.status(400).json({
+        status: false,
+        message: "Unable to update service.",
+      });
+    }
+    return res.status(200).json({
+      status: true,
+      message: "Service updated Succesfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Unable To update Service. Try Again Later.",
       error: error,
     });
   }

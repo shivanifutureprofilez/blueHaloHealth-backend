@@ -27,6 +27,10 @@ const serviceSchema = new mongoose.Schema(
       ref: "agegroups",
       required: true,
     },
+    featured: {
+      type:Number,
+      default:0
+    },
     deletedAt: {
       type: Date,
       default: null,
