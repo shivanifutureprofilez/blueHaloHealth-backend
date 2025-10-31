@@ -19,12 +19,14 @@ const ServiceRoutes = require("./routes/servicesRoutes");
 const AgeGroupRoutes = require("./routes/agesGroupRoutes");
 const UserRoutes = require("./routes/userRoutes");
 const ContactRoutes = require("./routes/contactRoutes");
+const EventRoutes = require("./routes/eventRoutes");
 
 // app.use('/api', userRoutes);
 app.use('/api', ServiceRoutes);
 app.use('/api', AgeGroupRoutes);
 app.use('/api',UserRoutes);
 app.use('/api',ContactRoutes);
+app.use('/api',EventRoutes);
 
 
 app.get('/', (req, res) => {
