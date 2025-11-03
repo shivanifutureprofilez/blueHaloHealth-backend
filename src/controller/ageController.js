@@ -42,8 +42,11 @@ exports.listAgeGroups = (async (req, res) => {
     try {
         //const list = await AgeGroup.find({ deletedAt: { $exists: true } });
         const list = await AgeGroup.find({ deletedAt: null })
-            .populate('services');
-        
+            .populate({
+                path: "services",
+                match: { deletedAt: null },
+            });
+
         if (!list) {
             return res.status(400).json({
                 ageGroupList: [],
@@ -125,7 +128,17 @@ exports.deleteAgeGroup = (async (req, res) => {
 exports.showAgeGroupDetails = (async (req, res) => {
     try {
         const _id = req.params.id;
-        const ageGroupData = await AgeGroup.findById(_id).populate("services");
+        //const ageGroupData = await AgeGroup.findById(_id).populate("services");
+
+        const ageGroupData = await AgeGroup.findOne({
+            _id,
+            deletedAt: null,
+        })
+            .populate({
+                path: "services",
+                match: { deletedAt: null },
+            });
+
         if (!ageGroupData) {
             return res.status(400).json({
                 status: false,
