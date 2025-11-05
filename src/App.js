@@ -21,6 +21,7 @@ const UserRoutes = require("./routes/userRoutes");
 const ContactRoutes = require("./routes/contactRoutes");
 const EventRoutes = require("./routes/eventRoutes");
 const ResoureRoutes = require("./routes/resourceRoutes");
+const WaitListRoutes = require("./routes/waitlistRoutes");
 
 // app.use('/api', userRoutes);
 app.use('/api', ServiceRoutes);
@@ -29,6 +30,7 @@ app.use('/api',UserRoutes);
 app.use('/api',ContactRoutes);
 app.use('/api',EventRoutes);
 app.use('/api',ResoureRoutes);
+app.use('/api',WaitListRoutes);
 
 
 app.get('/', (req, res) => {

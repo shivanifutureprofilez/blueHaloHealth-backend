@@ -9,6 +9,10 @@ const contactSchema = mongoose.Schema({
         type:String,
         required: [true, "Name is Required"],
     },
+    service:{
+        type:String,
+        required: [true, "Service is Required"],
+    },
     age:{
         type:Number,
         required:[true, "Age is Required"],
