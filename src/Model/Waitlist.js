@@ -12,7 +12,7 @@ const waitlistSchema = new mongoose.Schema({
         match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
     },
     },
-    {timestamp: true},
+    {timestamps: true},
 );
 
 const Waitlist = mongoose.model('waitlist',waitlistSchema);
