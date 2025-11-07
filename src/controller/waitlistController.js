@@ -62,3 +62,28 @@ exports.getWaitlist = (async (req,res) => {
         })
     }
 });
+
+exports.deleteWaitlist = (async (req,res) => {
+    try {
+        const id = req.params.id;
+        const wrongEnquiry = await Waitlist.findByIdAndDelete(id);
+        console.log("wrongEnquiry ",wrongEnquiry);
+        if(!wrongEnquiry){
+            return res.status(400).json({
+                status:false,
+                message:"Unable To Delete Waitlist Contact"
+            });
+        }
+        return res.status(200).json({
+            status:true,
+            message:"Waitlist Contact Deleted Successfully"
+        });
+    } catch(error) {
+        console.log("error : ",error);
+        return res.status(500).json({
+            status:false,
+            message:"Unable to delete waitlist contact. Try again later",
+            error:error
+        });
+    }
+});

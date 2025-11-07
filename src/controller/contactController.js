@@ -64,3 +64,30 @@ exports.contactList = (async (req, res) => {
         })
     } 
 });
+
+exports.deleteEnquiry = (async (req,res) => {
+    try {
+        const id = req.params.id;
+        const wrongEnquiry = await Contact.findByIdAndDelete(id);
+        console.log("wrongEnquiry ",wrongEnquiry);
+        if(!wrongEnquiry){
+            return res.status(400).json({
+                status:false,
+                message:"Unable To Delete Enquiry"
+            });
+        }
+        return res.status(200).json({
+            status:true,
+            message:"Enquiry Deleted Successfully"
+        });
+    } catch(error) {
+        console.log("error : ",error);
+        return res.status(500).json({
+            status:false,
+            message:"Unable to delete enquiry. Try again later",
+            error:error
+        });
+    }
+});
+
+
