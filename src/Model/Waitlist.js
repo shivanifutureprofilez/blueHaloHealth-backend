@@ -15,5 +15,5 @@ const waitlistSchema = new mongoose.Schema({
     {timestamps: true},
 );
 
-const Waitlist = mongoose.model('waitlists',waitlistSchema);
-module.exports = Waitlist;
+const WaitList = mongoose.model('waitlists',waitlistSchema);
+module.exports = WaitList;
