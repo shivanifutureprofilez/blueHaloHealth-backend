@@ -14,7 +14,8 @@ app.use(cors({
   allowedHeaders: '*',
   credentials: false, // keep false if you use wildcard origin
 }));
-app.options('*', cors());
+
+
 app.use(morgan("tiny"));
 require('./config');
 const ServiceRoutes = require("./routes/servicesRoutes");
