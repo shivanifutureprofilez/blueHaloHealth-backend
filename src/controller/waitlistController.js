@@ -1,6 +1,5 @@
 const Waitlist = require("../Model/WaitList");
 
-
 exports.addToWaitlist = async (req,res) => {
     try {
         const {email} = req.body;
