@@ -13,16 +13,5 @@
     ],
     "routes": [
       { "src": "/(.*)", "dest": "/src/App.js" }
-    ],
-    "headers": [
-      {
-        "source": "/(.*)",
-        "headers": [
-          { "key": "Access-Control-Allow-Origin", "value": "https://blue-halo-health-next-js.vercel.app" },
-          { "key": "Access-Control-Allow-Methods", "value": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS" },
-          { "key": "Access-Control-Allow-Headers", "value": "*" },
-          { "key": "Access-Control-Allow-Credentials", "value": "true" }
-        ]
-      }
     ]
   }
