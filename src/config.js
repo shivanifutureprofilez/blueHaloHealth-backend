@@ -1,7 +1,7 @@
 require('dotenv').config(); 
 const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_DB_URL, {
-   useNewUrlParser: true,
+   // useNewUrlParser: true,
    serverSelectionTimeoutMS: 15000,
    autoIndex: false,
    maxPoolSize: 10,
