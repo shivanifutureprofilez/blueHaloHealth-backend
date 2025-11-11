@@ -7,7 +7,6 @@ app.use(express.json({ limit: '2500mb' }));
 app.use(express.urlencoded({ limit: '2500mb', extended: true }));
 const cors = require("cors");
 const port = 5000;
- 
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
@@ -15,7 +14,6 @@ app.use(cors({
   },
   credentials: true
 }));
-
 app.use(morgan("tiny"));
 require('./config');
 const ServiceRoutes = require("./routes/servicesRoutes");

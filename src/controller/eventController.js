@@ -42,6 +42,8 @@ exports.addEvent = async (req,res) => {
     }
 };
 
+
+
 exports.listEvent = (async (req,res) => {
     try {
         const list = await Event.find({ deletedAt: null });
