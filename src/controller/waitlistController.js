@@ -1,4 +1,4 @@
-const Waitlist = require("../Model/WaitList");
+const JoinWaitList = require("../Model/JoinWaitList");
 
 exports.addToWaitlist = async (req,res) => {
     try {
@@ -9,7 +9,7 @@ exports.addToWaitlist = async (req,res) => {
                 message:"Email is required",
             });
         }
-        const result = new Waitlist({
+        const result = new JoinWaitList({
            email
         });
         const data = await result.save();
@@ -39,7 +39,7 @@ exports.addToWaitlist = async (req,res) => {
 
 exports.getWaitlist = (async (req,res) => {
     try {
-        const list = await Waitlist.find();
+        const list = await JoinWaitList.find();
         if(!list){
             return res.status(400).json({
                 status:false,
@@ -65,7 +65,7 @@ exports.getWaitlist = (async (req,res) => {
 exports.deleteWaitlist = (async (req,res) => {
     try {
         const id = req.params.id;
-        const wrongEnquiry = await Waitlist.findByIdAndDelete(id);
+        const wrongEnquiry = await JoinWaitList.findByIdAndDelete(id);
         console.log("wrongEnquiry ",wrongEnquiry);
         if(!wrongEnquiry){
             return res.status(400).json({
