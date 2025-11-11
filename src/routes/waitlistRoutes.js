@@ -1,6 +1,5 @@
 const { addToWaitlist, getWaitlist, deleteWaitlist } = require("../controller/waitlistController");
 
-
 const router = require("express").Router();
 
 router.post("/waitlist/add", addToWaitlist);
