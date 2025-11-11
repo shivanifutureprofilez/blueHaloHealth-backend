@@ -4,7 +4,6 @@ const express = require('express');
 const morgan = require("morgan")
 const app = express();
 app.use(express.json({ limit: '2500mb' }));
-app.use(morgan("tiny"));
 
 app.use(express.urlencoded({ limit: '2500mb', extended: true }));
 const cors = require("cors");
@@ -17,6 +16,7 @@ const corsOptions = {
     optionsSuccessStatus: 200, // for legacy browsers
 }
 app.use(cors(corsOptions));
+app.use(morgan("tiny"));
 require('./config');
 const ServiceRoutes = require("./routes/servicesRoutes");
 const AgeGroupRoutes = require("./routes/agesGroupRoutes");
