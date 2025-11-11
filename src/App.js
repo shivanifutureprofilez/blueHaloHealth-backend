@@ -7,14 +7,14 @@ app.use(express.json({ limit: '2500mb' }));
 app.use(express.urlencoded({ limit: '2500mb', extended: true }));
 const cors = require("cors");
 const port = 5000;
-const corsOptions = {
-    origin: ['https://blue-halo-health-next-js.vercel.app', 'http://localhost:3000'], // Allowed origins
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: '*', // Allow all headers
-    credentials: true,
-    optionsSuccessStatus: 200, // for legacy browsers
-}
-app.use(cors(corsOptions));
+ 
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: '*',
+  credentials: false, // keep false if you use wildcard origin
+}));
+app.options('*', cors());
 app.use(morgan("tiny"));
 require('./config');
 const ServiceRoutes = require("./routes/servicesRoutes");
