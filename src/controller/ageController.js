@@ -1,19 +1,17 @@
 const AgeGroup = require("../Model/AgeGroup");
 exports.addAgesGroup = (async (req, res) => {
     try {
-        const { title, description, minAge, maxAge, image } = req.body;
-        if (!title || !description) {
+        const { title, description, icon } = req.body;
+        if (!title || !icon) {
             return res.status(400).json({
                 status: false,
-                message: "All fields Required"
+                message: "Title and icon are Required"
             })
         }
         const result = new AgeGroup({
             title,
             description,
-            minAge,
-            maxAge,
-            image
+            icon
         });
 
         const data = await result.save();
@@ -21,20 +19,20 @@ exports.addAgesGroup = (async (req, res) => {
             return res.status(200).json({
                 data: data,
                 status: true,
-                message: "Age Group Added Successfully"
+                message: "Mega Service Added Successfully"
             })
         }
         else {
             return res.status(400).json({
                 status: false,
-                message: "Unable to add age group."
+                message: "Unable to Mega Service"
             })
         }
     } catch (error) {
         return res.status(500).json({
             status: false,
             error: error,
-            message: "Unable To Add Ages. Try Again later."
+            message: "Unable To Mega Service. Try Again later."
         })
     }
 });
@@ -51,13 +49,13 @@ exports.listAgeGroups = (async (req, res) => {
             return res.status(400).json({
                 ageGroupList: [],
                 status: false,
-                message: "Unable to fetch age group."
+                message: "Unable to fetch Mega Service."
             });
         }
         return res.status(200).json({
             ageGroupList: list,
             status: true,
-            message: "Fetched All Age Groups"
+            message: "Fetched All Mega Service"
         });
     } catch (error) {
         console.log("error", error)
@@ -65,36 +63,36 @@ exports.listAgeGroups = (async (req, res) => {
             status: false,
             ageGroupList: [],
             error: error,
-            message: "Unable To Fetch Age Groups. Try Again later."
+            message: "Unable To Fetch Mega Service. Try Again later."
         })
     }
 });
 
 exports.updateAgeGroup = (async (req, res) => {
     try {
-        const { _id, title, description, minAge, maxAge, image } = req.body;
-        if (!title || !description || !_id) {
-            return res.status(400).json({
-                status: false,
-                message: "All fields Required"
-            })
-        }
-        const ageGroupList = await AgeGroup.findByIdAndUpdate(_id, { title, description, minAge, maxAge, image });
+        const { _id, title, description, icon } = req.body;
+        // if (!title || icon || !_id) {
+        //     return res.status(400).json({
+        //         status: false,
+        //         message: "All fields Required"
+        //     })
+        // }
+        const ageGroupList = await AgeGroup.findByIdAndUpdate(_id, { title, description, icon });
         if (!ageGroupList) {
             return res.status(400).json({
                 status: false,
-                message: "Unable To Update age group"
+                message: "Unable To Update Mega ServiceMega Service"
             })
         }
         return res.status(200).json({
             status: true,
-            message: "Age Group Updated Successfully",
+            message: "Mega Service Updated Successfully",
             ageGroupList: ageGroupList
         })
     } catch (error) {
         return res.status(500).json({
             status: false,
-            message: "Age group Not Updated.Try again Later",
+            message: "Mega Service Not Updated.Try again Later",
             error: error
         })
     }
@@ -109,17 +107,17 @@ exports.deleteAgeGroup = (async (req, res) => {
         if (!ageGroupList) {
             return res.status(400).json({
                 status: false,
-                message: "Unable to Delete Age Group"
+                message: "Unable to Delete Mega Service"
             })
         }
         return res.status(200).json({
             status: true,
-            message: "Age Group has been removed successfully"
+            message: "Mega Service has been removed successfully"
         })
     } catch (error) {
         return res.status(500).json({
             status: false,
-            message: "Unable To delete Age Group. Try Again Later",
+            message: "Unable To delete Mega Service. Try Again Later",
             error: error
         })
     }
@@ -142,18 +140,18 @@ exports.showAgeGroupDetails = (async (req, res) => {
         if (!ageGroupData) {
             return res.status(400).json({
                 status: false,
-                message: "Unable to fetch age group data"
+                message: "Unable to fetch Mega Service data"
             })
         }
         return res.status(200).json({
             status: true,
-            message: "Succcessfully fetched age group data",
+            message: "Succcessfully fetched Mega Service data",
             ageGroupData: ageGroupData
         })
     } catch (error) {
         return res.status(500).json({
             status: false,
-            message: 'Unable To Show Age Group Details. Try Again Later!!',
+            message: 'Unable To Show Mega Service Details. Try Again Later!!',
             error: error
         })
     }
