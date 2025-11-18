@@ -2,15 +2,15 @@ const JoinWaitList = require("../Model/JoinWaitList");
 
 exports.addToWaitlist = async (req,res) => {
     try {
-        const {email} = req.body;
-        if(!email){
-            return res.status(400).json({
-                status:false,
-                message:"Email is required",
-            });
-        }
+        const {fullName, email, phone, age, service, consent1, consent2} = req.body;
+        // if(!fullName || !email || !phone || !age || !service || !consent1 || !consent2 ){
+        //     return res.status(400).json({
+        //         status:false,
+        //         message:"All fields are required",
+        //     });
+        // }
         const result = new JoinWaitList({
-           email
+           fullName, email, phone, age, service, consent1, consent2
         });
         const data = await result.save();
         if(!data){
@@ -20,7 +20,6 @@ exports.addToWaitlist = async (req,res) => {
                 data:[]
             });
         }
-
         return res.status(200).json({
             status:true,
             message:"Added To Waitlist",
