@@ -39,6 +39,9 @@ const serviceSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+serviceSchema.index({ deletedAt: 1 });
 serviceSchema.index({ agegroup: 1 });
+serviceSchema.index({ agegroup: 1, deletedAt: 1 });
+
 const Service = mongoose.model("services", serviceSchema);
 module.exports = Service;

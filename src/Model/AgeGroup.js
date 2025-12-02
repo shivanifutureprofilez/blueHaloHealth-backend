@@ -32,6 +32,10 @@ const ageGroupSchema = mongoose.Schema({
 }
 );
 
+ageGroupSchema.index({ deletedAt: 1 });
+
+Service.schema.index({ agegroup: 1, deletedAt: 1 });
+
 ageGroupSchema.pre(/^find/, function (next) {
     this.where({ deletedAt: { $exists: false } });
     next();

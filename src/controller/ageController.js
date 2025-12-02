@@ -36,37 +36,69 @@ exports.addAgesGroup = (async (req, res) => {
         })
     }
 });
-exports.listAgeGroups = (async (req, res) => {
+exports.listAgeGroups = async (req, res) => {
     try {
-        //const list = await AgeGroup.find({ deletedAt: { $exists: true } });
-        const list = await AgeGroup.find({ deletedAt: null })
-            .populate({
-                path: "services",
-                match: { deletedAt: null },
-            });
+        const list = await AgeGroup.aggregate([
+            {
+                $match: {
+                    deletedAt: null
+                }
+            },
+            {
+                $lookup: {
+                    from: "services",
+                    let: { agegroupId: "$_id" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ["$agegroup", "$$agegroupId"] },
+                                        { $eq: ["$deletedAt", null] }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            $project: {
+                                name: 1,
+                                // description: 1,
+                                // icon: 1
+                            }
+                        }
+                    ],
+                    as: "services"
+                }
+            },
+            {
+                $project: {
+                      _id: 1,
+                        title: 1,           // <-- AgeGroup title still included
+                        description: 1,
+                        icon: 1,
+                        services: 1,
+                        createdAt: 1
+                }
+            }
+        ]);
 
-        if (!list) {
-            return res.status(400).json({
-                ageGroupList: [],
-                status: false,
-                message: "Unable to fetch Mega Service."
-            });
-        }
         return res.status(200).json({
             ageGroupList: list,
             status: true,
             message: "Fetched All Mega Service"
         });
+
     } catch (error) {
-        console.log("error", error)
+        console.log("error", error);
         return res.status(500).json({
             status: false,
             ageGroupList: [],
             error: error,
             message: "Unable To Fetch Mega Service. Try Again later."
-        })
+        });
     }
-});
+};
+
 
 exports.updateAgeGroup = (async (req, res) => {
     try {
@@ -123,36 +155,38 @@ exports.deleteAgeGroup = (async (req, res) => {
     }
 });
 
-exports.showAgeGroupDetails = (async (req, res) => {
-    try {
-        const _id = req.params.id;
-        //const ageGroupData = await AgeGroup.findById(_id).populate("services");
+// exports.showAgeGroupDetails = (async (req, res) => {
+//     try {
+//         const _id = req.params.id;
+//         //const ageGroupData = await AgeGroup.findById(_id).populate("services");
 
-        const ageGroupData = await AgeGroup.findOne({
-            _id,
-            deletedAt: null,
-        })
-            .populate({
-                path: "services",
-                match: { deletedAt: null },
-            });
+//         const ageGroupData = await AgeGroup.findOne({
+//             _id,
+//             deletedAt: null,
+//         })
+//             .populate({
+//                 path: "services",
+//                 match: { deletedAt: null },
+//             });
 
-        if (!ageGroupData) {
-            return res.status(400).json({
-                status: false,
-                message: "Unable to fetch Mega Service data"
-            })
-        }
-        return res.status(200).json({
-            status: true,
-            message: "Succcessfully fetched Mega Service data",
-            ageGroupData: ageGroupData
-        })
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: 'Unable To Show Mega Service Details. Try Again Later!!',
-            error: error
-        })
-    }
-});
+//         if (!ageGroupData) {
+//             return res.status(400).json({
+//                 status: false,
+//                 message: "Unable to fetch Mega Service data"
+//             })
+//         }
+//         return res.status(200).json({
+//             status: true,
+//             message: "Succcessfully fetched Mega Service data",
+//             ageGroupData: ageGroupData
+//         })
+//     } catch (error) {
+//         return res.status(500).json({
+//             status: false,
+//             message: 'Unable To Show Mega Service Details. Try Again Later!!',
+//             error: error
+//         })
+//     }
+// });
+
+

@@ -6,7 +6,10 @@ mongoose.connect(process.env.MONGO_DB_URL, {
    autoIndex: false,
    maxPoolSize: 10,
    socketTimeoutMS: 45000,
-   family: 4
+   family: 4,
+   tls: true,
+   useNewUrlParser: true,
+   useUnifiedTopology: true
 })
 .then(() => {
    console.log('MongoDB connected successfully !!');
