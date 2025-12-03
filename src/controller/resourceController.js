@@ -1,4 +1,5 @@
 const Resource = require("../Model/Resource");
+const { invalidateByUrl } = require("../middleware/cache");
 
 exports.addResource = async (req,res) => {
     try {
@@ -23,6 +24,7 @@ exports.addResource = async (req,res) => {
                 data: []
             })
         }
+        await invalidateByUrl('/api/resource/list');
         return res.status(200).json({
             status:true,
             message:"Resource Added Successfully",
@@ -70,16 +72,17 @@ exports.deleteResource = (async (req,res)=>{
         const resourceData = await Resource.findByIdAndUpdate(_id);
         resourceData.deletedAt = new Date();
         resourceData.save();
-        if(!resourceData){
-            return res.status(400).json({
-                status:false,
-                message:"Unable to delete resource"
-            })
-        }
-        return res.status(200).json({
-            status:true,
-            message:"Resource Deleted Successfully"
+    if(!resourceData){
+        return res.status(400).json({
+            status:false,
+            message:"Unable to delete resource"
         })
+    }
+    await invalidateByUrl('/api/resource/list');
+    return res.status(200).json({
+        status:true,
+        message:"Resource Deleted Successfully"
+    })
     } catch (error) {
         console.log("error : ",error);
         return res.status(500).json({
@@ -108,6 +111,7 @@ exports.updateResource = (async (req,res) => {
                 resourceData:[]
             })
         }
+        await invalidateByUrl('/api/resource/list');
         return res.status(200).json({
             status: true,
             message: "Resource Updated Successfully",
@@ -122,7 +126,6 @@ exports.updateResource = (async (req,res) => {
         })        
     }
 });
-
 
 
 

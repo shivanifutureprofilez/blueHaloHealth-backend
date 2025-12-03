@@ -1,4 +1,5 @@
 const Event = require("../Model/Event");
+const { invalidateByUrl } = require("../middleware/cache");
 
 exports.addEvent = async (req,res) => {
     try {
@@ -26,6 +27,7 @@ exports.addEvent = async (req,res) => {
             });
         }
 
+        await invalidateByUrl('/api/event/list');
         return res.status(200).json({
             status:true,
             message:"Event Added Successfully",
@@ -79,6 +81,7 @@ exports.deleteEvent = (async (req,res) => {
             message:"Unable To delete Event"
         })
     }
+    await invalidateByUrl('/api/event/list');
     return res.status(200).json({
         status:true,
         message:"Event Deleted Successfully"
@@ -112,6 +115,7 @@ exports.updateEvent = (async (req,res) => {
                 eventData:[]
             })
         }
+        await invalidateByUrl('/api/event/list');
         return res.status(200).json({
             status: true,
             message: "Event Updated Successfully",
@@ -126,6 +130,5 @@ exports.updateEvent = (async (req,res) => {
         })
     }
 });
-
 
 

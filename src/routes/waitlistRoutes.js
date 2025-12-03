@@ -1,4 +1,5 @@
 const { addToWaitlist, getWaitlist, deleteWaitlist } = require("../controller/waitlistController");
+const { cacheByUrl } = require("../middleware/cache");
 
 const router = require("express").Router();
 
