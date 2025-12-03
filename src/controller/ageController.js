@@ -1,4 +1,5 @@
 const AgeGroup = require("../Model/AgeGroup");
+const { invalidateByUrl } = require("../middleware/cache");
 exports.addAgesGroup = (async (req, res) => {
     try {
         const { title, description, icon } = req.body;
@@ -82,6 +83,7 @@ exports.listAgeGroups = async (req, res) => {
             }
         ]);
 
+        res.set('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=300');
         return res.status(200).json({
             ageGroupList: list,
             status: true,
@@ -116,6 +118,7 @@ exports.updateAgeGroup = (async (req, res) => {
                 message: "Unable To Update Mega ServiceMega Service"
             })
         }
+        await invalidateByUrl('/api/agegroup/list');
         return res.status(200).json({
             status: true,
             message: "Mega Service Updated Successfully",
@@ -142,6 +145,7 @@ exports.deleteAgeGroup = (async (req, res) => {
                 message: "Unable to Delete Mega Service"
             })
         }
+        await invalidateByUrl('/api/agegroup/list');
         return res.status(200).json({
             status: true,
             message: "Mega Service has been removed successfully"
@@ -188,5 +192,4 @@ exports.deleteAgeGroup = (async (req, res) => {
 //         })
 //     }
 // });
-
 

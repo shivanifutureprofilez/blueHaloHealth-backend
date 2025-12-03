@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Service = require("../Model/Service");
 const AgeGroup = require("../Model/AgeGroup");
+const { invalidateByUrl } = require("../middleware/cache");
 
 // exports.addNewService = async (req, res) => {
 //   try {
@@ -400,6 +401,9 @@ exports.updateService = async (req, res) => {
       });
     }
 
+    await invalidateByUrl('/api/service/list');
+    await invalidateByUrl('/api/agegroup/list');
+    await invalidateByUrl('/api/service/featured/list');
     return res.status(200).json({
       status: true,
       message: "Service updated successfully.",
@@ -427,6 +431,9 @@ exports.deleteService = async (req, res) => {
         message: "Unable To Delete Service",
       });
     }
+    await invalidateByUrl('/api/service/list');
+    await invalidateByUrl('/api/agegroup/list');
+    await invalidateByUrl('/api/service/featured/list');
     return res.status(200).json({
       status: true,
       message: "Service Deleted Succesfully",
