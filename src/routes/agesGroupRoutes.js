@@ -7,6 +7,4 @@ router.get('/agegroup/list', cacheByUrl(300), listAgeGroups);
 router.get('/agegroup/delete/:id', deleteAgeGroup);
 router.post('/agegroup/update',updateAgeGroup);
 
-
-
 module.exports = router;
