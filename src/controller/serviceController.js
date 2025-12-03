@@ -400,6 +400,7 @@ exports.updateService = async (req, res) => {
       });
     }
 
+    await invalidateByUrl(`/api/service/${id}`);
     await invalidateByUrl('/api/service/list');
     await invalidateByUrl('/api/agegroup/list');
     await invalidateByUrl('/api/service/featured/list');

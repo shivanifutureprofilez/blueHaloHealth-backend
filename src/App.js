@@ -31,6 +31,7 @@ const ResoureRoutes = require("./routes/resourceRoutes");
 const WaitListRoutes = require("./routes/waitlistRoutes");
 const TeamRoutes = require("./routes/teamRoutes");
 const ServiceRoutes = require("./routes/servicesRoutes");
+const SubServiceRoutes = require("./routes/subServiceRoutes");
 
 
 app.use(express.json({ limit: '2500mb' }));
@@ -45,6 +46,7 @@ app.use('/api',WaitListRoutes);
 app.use('/api', TeamRoutes);
 // app.use('/api', userRoutes);
 app.use('/api', ServiceRoutes);
+app.use('/api', SubServiceRoutes);
 
 
 app.get('/', (req, res) => {
