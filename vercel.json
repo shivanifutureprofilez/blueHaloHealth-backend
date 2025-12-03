@@ -1,17 +1,9 @@
 {
-    "version": 2,
-    "name": "Blue Halo Health",
-    "builds": [
-      { 
-        "src": "/src/App.js", 
-        "use": "@vercel/node",
-        "config": {
-          "maxDuration": 30,
-          "memory": 3009
-        }
-      }
-    ],
-    "routes": [
-      { "src": "/(.*)", "dest": "/src/App.js" }
-    ]
-  }
+  "version": 2,
+  "builds": [
+    { "src": "src/App.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "src/App.js" }
+  ]
+}

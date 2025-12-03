@@ -54,6 +54,16 @@ app.get('/', (req, res) => {
     });
 }) 
 
-app.listen(port, () => {
-    console.log(`Server Listening ${port}`)
+app.get('/cache/status', (req, res) => {
+    const cache = require('./redisClient');
+    res.json({ redisReady: cache.isReady(), usingMemoryFallback: !cache.isReady() });
 });
+
+const isVercel = !!process.env.VERCEL;
+if (!isVercel) {
+  app.listen(port, () => {
+      console.log(`Server Listening ${port}`)
+  });
+}
+
+module.exports = app;
