@@ -48,8 +48,8 @@ exports.singleSubServiceDetails = async (req, res) => {
     const id = req.params.id;
     const subServiceData = await SubService.findOne({
       _id: id,
-      deletedAt: null,   // ensures soft-deleted services are excluded
-    }).lean();           // makes it faster (returns plain object)
+      deletedAt: null, 
+    }).lean().populate("service");   
 
     if (!subServiceData) {
       return res.status(404).json({
