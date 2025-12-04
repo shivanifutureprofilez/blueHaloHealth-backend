@@ -16,6 +16,9 @@ const serviceSchema = new mongoose.Schema(
     content: {
       type: String,
     },
+    additionalContent: {
+      type: String,
+    },
     benefits: [
       {
         title: { type: String },
@@ -33,7 +36,6 @@ const serviceSchema = new mongoose.Schema(
     },
     deletedAt: {
       type: Date,
-      default: null,
     },
   },
   { timestamps: true }

@@ -47,7 +47,7 @@ const { invalidateByUrl } = require("../middleware/cache");
 exports.addNewService = async (req, res) => {
   try {
     console.log("req.file ",req.body);
-    const { title, name, description, content, benefits, bannerImg } = req.body;
+    const { title, name, description, content,additionalContent, benefits, bannerImg } = req.body;
     
     let imgurl = bannerImg;
     if(req.file){ 
@@ -72,6 +72,7 @@ exports.addNewService = async (req, res) => {
       name: title,
       description,
       content,
+      additionalContent,
       benefits: mappedBenefits,
       agegroup: name,
       bannerImg: imgurl,
@@ -162,6 +163,7 @@ exports.getServicebyId = async (req, res) => {
           agegroup: 1,
           benefits: 1,
           content: 1, // keep this if needed; remove if not
+          additionalContent: 1,
           createdAt: 1
         }
       }
@@ -360,7 +362,7 @@ exports.showAllServices = async (req, res) => {
 exports.updateService = async (req, res) => {
   try {
     const id = req.params.id;
-    const { title, name, bannerImg, description, content, benefits } = req.body;
+    const { title, name, bannerImg, description, content, additionalContent, benefits } = req.body;
 
     // Validate
     if (!name || !title) {
@@ -381,6 +383,7 @@ exports.updateService = async (req, res) => {
       agegroup: name,
       description,
       content,
+      additionalContent,
       bannerImg,
       benefits: mappedBenefits,
       updatedAt: new Date()
