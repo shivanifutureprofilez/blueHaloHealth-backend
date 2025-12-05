@@ -48,8 +48,8 @@ exports.singleSubServiceDetails = async (req, res) => {
     const id = req.params.id;
     const subServiceData = await SubService.findOne({
       _id: id,
-      deletedAt: null, 
-    }).lean().populate("service");   
+      deletedAt: null,
+    }).lean().populate("service");
 
     if (!subServiceData) {
       return res.status(404).json({
@@ -76,8 +76,11 @@ exports.singleSubServiceDetails = async (req, res) => {
 exports.allSubService = (async (req, res) => {
   try {
     const id = req.params.serviceid;
-    console.log("id",id);
-    const list = await SubService.find({service:id});
+    console.log("id", id);
+    const list = await SubService.find({
+      service: id,
+      deleted: null
+    });
     if (!list) {
       return res.status(200).json({
         status: false,
@@ -99,3 +102,67 @@ exports.allSubService = (async (req, res) => {
     });
   }
 });
+
+exports.updateSubService = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    console.log("_id", _id);
+    const { name, bannerImg, description, content, service } = req.body;
+
+    const subService = await SubService.findByIdAndUpdate(
+      _id,
+      { name, bannerImg, description, content, service },
+      { new: true }
+    );
+
+    if (!subService) {
+      return res.status(200).json({
+        status: false,
+        message: "Unable To Update Sub-Service"
+      });
+    }
+
+    await invalidateByUrl(`/api/subservice/${_id}`);
+
+    return res.status(200).json({
+      status: true,
+      message: "Sub Service Updated Successfully",
+      data: subService
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "Sub Service Not Updated. Try again Later",
+      error
+    });
+  }
+};
+
+exports.deleteSubService = (async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const subServiceData = await SubService.findByIdAndUpdate(_id);
+    subServiceData.deletedAt = new Date();
+    subServiceData.save();
+    if (!subServiceData) {
+      return res.status(200).json({
+        status: false,
+        message: "Unable To delete Sub service"
+      })
+    }
+    await invalidateByUrl(`/api/subservice/${_id}`);
+    return res.status(200).json({
+      status: true,
+      message: "Sub service deleted succesfully"
+    })
+  } catch (error) {
+    console.log("error : ", error);
+    return res.status(500).json({
+      status: false,
+      message: "Unable to delete sub services. Try again later",
+      error: error
+    });
+  }
+});
+
