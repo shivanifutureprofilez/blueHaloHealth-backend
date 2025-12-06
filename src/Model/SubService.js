@@ -25,15 +25,23 @@ const subServiceSchema = new mongoose.Schema(
     service: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "services",
-      required: true,
     },
     deletedAt: {
-      type: Date,
-      default: null,
+      type: Date
     },
   },
   { timestamps: true }
 );
+
+// subServiceSchema.pre(/^find/, function (next) {
+//   this.where({ deletedAt: { $exists: false } });
+//   next();
+// });
+subServiceSchema.pre(/^find/, function (next) {
+  this.where({ deletedAt: { $exists: false } });
+  next();
+});
+
 
 const SubService = mongoose.model("subservices", subServiceSchema);
 module.exports = SubService;

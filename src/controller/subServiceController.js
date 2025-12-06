@@ -48,8 +48,7 @@ exports.singleSubServiceDetails = async (req, res) => {
     const id = req.params.id;
     const subServiceData = await SubService.findOne({
       _id: id,
-      deletedAt: null,
-    }).lean().populate("service");
+    }).populate("service");
 
     if (!subServiceData) {
       return res.status(404).json({
@@ -75,11 +74,10 @@ exports.singleSubServiceDetails = async (req, res) => {
 
 exports.allSubService = (async (req, res) => {
   try {
-    const id = req.params.serviceid;
-    console.log("id", id);
+    const id = req.params.serviceid; 
     const list = await SubService.find({
       service: id,
-      deleted: null
+      // deletedAt: { $exists: false }
     });
     if (!list) {
       return res.status(200).json({
@@ -105,24 +103,25 @@ exports.allSubService = (async (req, res) => {
 
 exports.updateSubService = async (req, res) => {
   try {
-    const { _id } = req.params;
-    console.log("_id", _id);
-    const { name, bannerImg, description, content, service } = req.body;
-
+    const { id } = req.params;
+    console.log("_id", id);
+    console.log("req.body", req.body);
+    const { name, bannerImg, description, content  } = req.body;
     const subService = await SubService.findByIdAndUpdate(
-      _id,
-      { name, bannerImg, description, content, service },
+      id,
+      { name, bannerImg, description, content },
       { new: true }
     );
 
     if (!subService) {
       return res.status(200).json({
         status: false,
+        errro: subService,
         message: "Unable To Update Sub-Service"
       });
     }
-
-    await invalidateByUrl(`/api/subservice/${_id}`);
+    await invalidateByUrl(`/api/subservice/${id}`);
+    await invalidateByUrl(`/api/service/${subService?.service}`);
 
     return res.status(200).json({
       status: true,
@@ -131,6 +130,7 @@ exports.updateSubService = async (req, res) => {
     });
 
   } catch (error) {
+    console.log("error", error)
     return res.status(500).json({
       status: false,
       message: "Sub Service Not Updated. Try again Later",

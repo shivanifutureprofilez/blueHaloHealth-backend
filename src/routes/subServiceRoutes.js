@@ -8,7 +8,7 @@ const router = require("express").Router();
 router.post("/subservice/add", upload.single("bannerImg"), addNewSubService);
 router.get("/subservice/:id",  cacheByUrl(300),  singleSubServiceDetails);
 router.get('/subservice/list/:serviceid',  cacheByUrl(300), allSubService);
-router.post('/subservice/update/:id',updateSubService);
+router.post('/subservice/update/:id', upload.single("bannerImg"), updateSubService);
 router.get('/subservice/delete/:id', deleteSubService);
 
 

@@ -57,7 +57,9 @@ async function init() {
 }
 
 // initialize immediately
-init();
+// if(process.env.NODE_APP !== 'development'){
+  init();
+// }
 
 async function get(key) {
   if (!ready && mode !== 'rest') {
