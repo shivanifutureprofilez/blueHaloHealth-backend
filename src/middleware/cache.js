@@ -2,6 +2,7 @@ const cache = require('../redisClient');
 
 function cacheByUrl(ttlSeconds = 300) {
   return async function (req, res, next) {
+    next();
     if (req.method !== 'GET') return next();
 
     const key = `cache:${req.originalUrl}`;
