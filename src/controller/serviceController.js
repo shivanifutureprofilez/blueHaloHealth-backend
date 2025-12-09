@@ -530,7 +530,8 @@ exports.showServiceDetails = async (req, res) => {
       {
         $project: {
           _id: 1,
-          title: 1,
+          // title: 1,
+          name:1,
           description: 1,
           bannerImg: 1,
           content: 1,
