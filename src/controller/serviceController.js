@@ -476,16 +476,75 @@ exports.featureService = async (req, res) => {
   }
 };
 
+// exports.showServiceDetails = async (req, res) => {
+//   try {
+//     const id = req.params.id;
+
+//     const serviceData = await Service.findOne({
+//       _id: id,
+//       deletedAt: null,   // ensures soft-deleted services are excluded
+//     }).lean().populate("agegroup");           // makes it faster (returns plain object)
+
+//     if (!serviceData) {
+//       return res.status(404).json({
+//         status: false,
+//         message: "Service not found",
+//       });
+//     }
+
+//     return res.status(200).json({
+//       status: true,
+//       message: "Service Details Fetched Successfully",
+//       serviceData,
+//     });
+
+//   } catch (error) {
+//     return res.status(500).json({
+//       status: false,
+//       error,
+//       message: "Unable To Fetch Service Details",
+//     });
+//   }
+// };
+
 exports.showServiceDetails = async (req, res) => {
   try {
     const id = req.params.id;
 
-    const serviceData = await Service.findOne({
-      _id: id,
-      deletedAt: null,   // ensures soft-deleted services are excluded
-    }).lean();           // makes it faster (returns plain object)
+    const serviceData = await Service.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id),
+          deletedAt: null
+        }
+      },
+      {
+        $lookup: {
+          from: "agegroups",
+          localField: "agegroup",
+          foreignField: "_id",
+          as: "agegroup"
+        }
+      },
+      { $unwind: "$agegroup" },
+      {
+        $project: {
+          _id: 1,
+          title: 1,
+          description: 1,
+          bannerImg: 1,
+          content: 1,
+          benefits: 1,
+          agegroup: {
+            _id: 1,
+            title: 1,
+          },
+          createdAt: 1,
+        }
+      }
+    ]);
 
-    if (!serviceData) {
+    if (!serviceData.length) {
       return res.status(404).json({
         status: false,
         message: "Service not found",
@@ -495,7 +554,7 @@ exports.showServiceDetails = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "Service Details Fetched Successfully",
-      serviceData,
+      serviceData: serviceData[0],
     });
 
   } catch (error) {
