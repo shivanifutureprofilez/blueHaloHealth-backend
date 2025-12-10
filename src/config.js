@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 mongoose.connect(process.env.MONGO_DB_URL, {
    // useNewUrlParser: true,
    serverSelectionTimeoutMS: 15000,
-   autoIndex: false,
+   // autoIndex: false,
    maxPoolSize: 10,
    socketTimeoutMS: 45000,
    family: 4,
-   tls: true,
-   useNewUrlParser: true,
-   useUnifiedTopology: true
+   // tls: true,
+   // useNewUrlParser: true,
+   // useUnifiedTopology: true
 })
 .then(() => {
    console.log('MongoDB connected successfully !!');

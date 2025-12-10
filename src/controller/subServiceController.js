@@ -1,4 +1,5 @@
 const SubService = require("../Model/SubService");
+const { connectDB } = require("../db");
 const { invalidateByUrl } = require("../middleware/cache");
 
 exports.addNewSubService = async (req, res) => {
@@ -45,6 +46,7 @@ exports.addNewSubService = async (req, res) => {
 
 exports.singleSubServiceDetails = async (req, res) => {
   try {
+    await connectDB();
     const id = req.params.id;
     const subServiceData = await SubService.findOne({
       _id: id,
@@ -74,6 +76,7 @@ exports.singleSubServiceDetails = async (req, res) => {
 
 exports.allSubService = (async (req, res) => {
   try {
+    await connectDB();
     const id = req.params.serviceid; 
     const list = await SubService.find({
       service: id,
