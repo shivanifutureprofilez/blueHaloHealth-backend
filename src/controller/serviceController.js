@@ -511,7 +511,7 @@ exports.featureService = async (req, res) => {
 
 exports.showServiceDetails = async (req, res) => {
   try {
-    await connectDB();
+    // await connectDB();
     const id = req.params.id;
 
     const serviceData = await Service.aggregate([
