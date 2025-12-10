@@ -126,7 +126,7 @@ exports.addNewService = async (req, res) => {
 
 exports.getServicebyId = async (req, res) => {
   try {
-    await connectDB();
+    // await connectDB();
     const id = req.params.id;
 
     const serviceData = await Service.aggregate([
@@ -232,7 +232,7 @@ exports.showFeaturedServices = async (req, res) => {
 
 exports.showAllServices = async (req, res) => {
   try {
-    await connectDB();
+    // await connectDB();
     const { age } = req.query;
 
     const matchStage = { deletedAt: null };
