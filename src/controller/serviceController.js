@@ -46,11 +46,11 @@ const { invalidateByUrl } = require("../middleware/cache");
 
 exports.addNewService = async (req, res) => {
   try {
-    console.log("req.file ",req.body);
-    const { title, name, description, content,additionalContent, benefits, bannerImg } = req.body;
-    
+    console.log("req.file ", req.body);
+    const { title, name, description, content, additionalContent, benefits, bannerImg } = req.body;
+
     let imgurl = bannerImg;
-    if(req.file){ 
+    if (req.file) {
       imgurl = process.env.APP_URL + "/uploads/" + req.file?.filename;
     }
 
@@ -61,7 +61,7 @@ exports.addNewService = async (req, res) => {
         message: "Name and title are required.",
       });
     }
-    console.log("reqbod",req.body)
+    console.log("reqbod", req.body)
     let mappedBenefits;
     mappedBenefits = (mappedBenefits || []).map((b) => ({
       title: b.name,
@@ -126,6 +126,7 @@ exports.addNewService = async (req, res) => {
 
 exports.getServicebyId = async (req, res) => {
   try {
+    await connectDB();
     const id = req.params.id;
 
     const serviceData = await Service.aggregate([
@@ -230,77 +231,78 @@ exports.showFeaturedServices = async (req, res) => {
 
 
 exports.showAllServices = async (req, res) => {
-    try {
-        const { age } = req.query;
+  try {
+    await connectDB();
+    const { age } = req.query;
 
-        const matchStage = { deletedAt: null };
+    const matchStage = { deletedAt: null };
 
-        if (age && age !== "") {
-            matchStage.agegroup = new mongoose.Types.ObjectId(age);
-        }
-
-        const serviceData = await Service.aggregate([
-            { $match: matchStage },
-
-            {
-                $lookup: {
-                    from: "agegroups",
-                    let: { agId: "$agegroup" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        { $eq: ["$_id", "$$agId"] },
-                                        { $eq: ["$deletedAt", null] }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            $project: {
-                                title: 1,   // return only what you need
-                                icon: 1
-                            }
-                        }
-                    ],
-                    as: "agegroup"
-                }
-            },
-
-            {
-                $unwind: {
-                    path: "$agegroup",
-                    preserveNullAndEmptyArrays: true
-                }
-            },
-            {
-                $project: {
-                    _id: 1,
-                    name: 1,
-                    bannerImg: 1,
-                    icon: 1,
-                    description: 1,
-                    agegroup: 1
-                }
-            }
-        ]);
-
-        return res.status(200).json({
-            status: true,
-            allServices: serviceData,
-            message: "Fetched All Services",
-
-        });
-
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            status: false,
-            allServices: [],
-            message: "Unable to fetch all services. Try again Later",
-        });
+    if (age && age !== "") {
+      matchStage.agegroup = new mongoose.Types.ObjectId(age);
     }
+
+    const serviceData = await Service.aggregate([
+      { $match: matchStage },
+
+      {
+        $lookup: {
+          from: "agegroups",
+          let: { agId: "$agegroup" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$_id", "$$agId"] },
+                    { $eq: ["$deletedAt", null] }
+                  ]
+                }
+              }
+            },
+            {
+              $project: {
+                title: 1,   // return only what you need
+                icon: 1
+              }
+            }
+          ],
+          as: "agegroup"
+        }
+      },
+
+      {
+        $unwind: {
+          path: "$agegroup",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          bannerImg: 1,
+          icon: 1,
+          description: 1,
+          agegroup: 1
+        }
+      }
+    ]);
+
+    return res.status(200).json({
+      status: true,
+      allServices: serviceData,
+      message: "Fetched All Services",
+
+    });
+
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      allServices: [],
+      message: "Unable to fetch all services. Try again Later",
+    });
+  }
 };
 
 
@@ -509,6 +511,7 @@ exports.featureService = async (req, res) => {
 
 exports.showServiceDetails = async (req, res) => {
   try {
+    await connectDB();
     const id = req.params.id;
 
     const serviceData = await Service.aggregate([
@@ -531,7 +534,7 @@ exports.showServiceDetails = async (req, res) => {
         $project: {
           _id: 1,
           // title: 1,
-          name:1,
+          name: 1,
           description: 1,
           bannerImg: 1,
           content: 1,
@@ -570,11 +573,12 @@ exports.showServiceDetails = async (req, res) => {
 
 exports.servicesListOfGroup = async (req, res) => {
   try {
+    await connectDB();
     const _id = req.params.id;
     const services = await Service.aggregate([
       {
         $match: {
-          agegroup:new mongoose.Types.ObjectId(_id) ,
+          agegroup: new mongoose.Types.ObjectId(_id),
           deletedAt: null
         }
       },
