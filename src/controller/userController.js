@@ -6,19 +6,19 @@ exports.validateToken = async (req, res, next) => {
     try {
         const authHeader = req.headers["authorization"];
         if (!authHeader) {
-            return res.status(401).json({ status: false, message: "No token provided" });
+            return res.status(200).json({ status: false, message: "No token provided" });
         }
 
         // Token format: "Bearer <token>"
         const token = authHeader.split(" ")[1];
         if (!token) {
-            return res.status(401).json({ status: false, message: "Token missing" });
+            return res.status(200).json({ status: false, message: "Token missing" });
         }
 
         // Verify token
         jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
             if (err) {
-                return res.status(403).json({ status: false, message: "Invalid or expired token" });
+                return res.status(200).json({ status: false, message: "Invalid or expired token" });
             }
             const user = await User.findById(decoded.userId);
             req.user = user;
