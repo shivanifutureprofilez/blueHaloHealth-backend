@@ -13,6 +13,9 @@ const ageGroupSchema = mongoose.Schema({
         type: String,
         // required: [true, "Icon is required"]
     },
+    coverImg: {
+        type:String,
+    },
     // minAge: {
     //     type : Number
     // },

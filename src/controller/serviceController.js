@@ -243,7 +243,6 @@ exports.showAllServices = async (req, res) => {
 
     const serviceData = await Service.aggregate([
       { $match: matchStage },
-
       {
         $lookup: {
           from: "agegroups",

@@ -1,8 +1,16 @@
 const AgeGroup = require("../Model/AgeGroup");
+const Service = require("../Model/Service");
 const { invalidateByUrl } = require("../middleware/cache");
 exports.addAgesGroup = (async (req, res) => {
+    console.log("req.body ", req.body);
     try {
-        const { title, description, icon } = req.body;
+        const { title, description, icon, coverImg } = req.body;
+        let imgurl = coverImg;
+        if (req.file) {
+            imgurl = process.env.APP_URL + "/uploads/" + req.file?.filename;
+        }
+
+        const file = req.file;
         if (!title || !icon) {
             return res.status(400).json({
                 status: false,
@@ -12,7 +20,8 @@ exports.addAgesGroup = (async (req, res) => {
         const result = new AgeGroup({
             title,
             description,
-            icon
+            icon,
+            coverImg: imgurl
         });
 
         const data = await result.save();
@@ -26,10 +35,11 @@ exports.addAgesGroup = (async (req, res) => {
         else {
             return res.status(400).json({
                 status: false,
-                message: "Unable to Mega Service"
+                message: "Unable to add Mega Service"
             })
         }
     } catch (error) {
+        console.log("error ", error);
         return res.status(500).json({
             status: false,
             error: error,
@@ -37,6 +47,39 @@ exports.addAgesGroup = (async (req, res) => {
         })
     }
 });
+
+
+exports.singleCategoryDetail = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const category = await AgeGroup.findOne({
+            _id: id,
+        });
+
+        const services = await Service.find({ "agegroup": category._id });
+
+        if (!category) {
+            return res.status(200).json({
+                status: false,
+                message: "category not found"
+            })
+        }
+        return res.status(200).json({
+            status: true,
+            message: "Category data found successfully",
+            category: category,
+            services: services
+        })
+    } catch (error) {
+        console.log("error : ", error);
+        return res.status(500).json({
+            status: false,
+            message: "Something went wrong",
+            error: error
+        })
+    }
+}
+
 exports.listAgeGroups = async (req, res) => {
     try {
         const list = await AgeGroup.aggregate([
@@ -73,12 +116,13 @@ exports.listAgeGroups = async (req, res) => {
             },
             {
                 $project: {
-                      _id: 1,
-                        title: 1,           // <-- AgeGroup title still included
-                        description: 1,
-                        icon: 1,
-                        services: 1,
-                        createdAt: 1
+                    _id: 1,
+                    title: 1,           // <-- AgeGroup title still included
+                    description: 1,
+                    icon: 1,
+                    services: 1,
+                    coverImg: 1,
+                    createdAt: 1
                 }
             }
         ]);
@@ -104,17 +148,26 @@ exports.listAgeGroups = async (req, res) => {
 
 exports.updateAgeGroup = (async (req, res) => {
     try {
-        const { _id, title, description, icon } = req.body;
+        const { _id, title, description, icon, coverImg } = req.body;
+        let imgurl = coverImg;
+        if (req.file) {
+            imgurl = process.env.APP_URL + "/uploads/" + req.file?.filename;
+        }
+
+        console.log("id", req.body)
+
         // if (!title || icon || !_id) {
         //     return res.status(400).json({
         //         status: false,
         //         message: "All fields Required"
         //     })
         // }
-        const ageGroupList = await AgeGroup.findByIdAndUpdate(_id, { title, description, icon });
+        const ageGroupList = await AgeGroup.findByIdAndUpdate(_id, { title, description, icon, coverImg:imgurl });
         if (!ageGroupList) {
-            return res.status(400).json({
+            console.log("agegrouplisy : ",ageGroupList)
+            return res.status(200).json({
                 status: false,
+                error:ageGroupList,
                 message: "Unable To Update Mega ServiceMega Service"
             })
         }
@@ -125,6 +178,7 @@ exports.updateAgeGroup = (async (req, res) => {
             ageGroupList: ageGroupList
         })
     } catch (error) {
+        console.log("error : ",error);
         return res.status(500).json({
             status: false,
             message: "Mega Service Not Updated.Try again Later",
