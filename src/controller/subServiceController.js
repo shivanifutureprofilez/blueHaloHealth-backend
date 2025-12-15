@@ -1,11 +1,15 @@
+const { default: mongoose } = require("mongoose");
+const Service = require("../Model/Service");
 const SubService = require("../Model/SubService");
 const { connectDB } = require("../db");
 const { invalidateByUrl } = require("../middleware/cache");
+const { toSlug } = require("../utils/toSlug");
 
 exports.addNewSubService = async (req, res) => {
   try {
     console.log("req.file ", req.body);
     const { name, bannerImg, description, content, service } = req.body;
+    const slug = toSlug(name);
     console.log("req.body ", req.body);
     let imgurl = bannerImg;
     if (req.file) {
@@ -24,7 +28,8 @@ exports.addNewSubService = async (req, res) => {
       description,
       content,
       bannerImg: imgurl,
-      service
+      service,
+      slug
     });
 
     await newSubService.save();
@@ -49,7 +54,7 @@ exports.singleSubServiceDetails = async (req, res) => {
     await connectDB();
     const id = req.params.id;
     const subServiceData = await SubService.findOne({
-      _id: id,
+      slug: id,
     }).populate("service");
 
     if (!subServiceData) {
@@ -77,11 +82,21 @@ exports.singleSubServiceDetails = async (req, res) => {
 exports.allSubService = (async (req, res) => {
   try {
     await connectDB();
-    const id = req.params.serviceid; 
+  
+    const id = req.params.serviceid;
+    const s = await Service.findOne({slug:id});
+
+    let serviceid_slug;
+    if (s) {
+       serviceid_slug = s?._id;
+    } else {
+      serviceid_slug = id;
+    }
     const list = await SubService.find({
-      service: id,
-      // deletedAt: { $exists: false }
+        service: serviceid_slug
     });
+
+
     if (!list) {
       return res.status(200).json({
         status: false,
@@ -109,10 +124,11 @@ exports.updateSubService = async (req, res) => {
     const { id } = req.params;
     console.log("_id", id);
     console.log("req.body", req.body);
-    const { name, bannerImg, description, content  } = req.body;
+    const { name, bannerImg, description, content } = req.body;
+    const slug = toSlug(name);
     const subService = await SubService.findByIdAndUpdate(
       id,
-      { name, bannerImg, description, content },
+      { name, bannerImg, description, content,slug },
       { new: true }
     );
 

@@ -1,6 +1,8 @@
 const AgeGroup = require("../Model/AgeGroup");
 const Service = require("../Model/Service");
 const { invalidateByUrl } = require("../middleware/cache");
+const {toSlug} = require("../utils/toSlug");
+
 exports.addAgesGroup = (async (req, res) => {
     console.log("req.body ", req.body);
     try {
@@ -9,7 +11,7 @@ exports.addAgesGroup = (async (req, res) => {
         if (req.file) {
             imgurl = process.env.APP_URL + "/uploads/" + req.file?.filename;
         }
-
+        const slug = toSlug(title);
         const file = req.file;
         if (!title || !icon) {
             return res.status(400).json({
@@ -20,6 +22,7 @@ exports.addAgesGroup = (async (req, res) => {
         const result = new AgeGroup({
             title,
             description,
+            slug,
             icon,
             coverImg: imgurl
         });
@@ -48,12 +51,11 @@ exports.addAgesGroup = (async (req, res) => {
     }
 });
 
-
 exports.singleCategoryDetail = async (req, res) => {
     try {
         const id = req.params.id;
         const category = await AgeGroup.findOne({
-            _id: id,
+            slug: id,
         });
 
         const services = await Service.find({ "agegroup": category._id });
@@ -153,7 +155,7 @@ exports.updateAgeGroup = (async (req, res) => {
         if (req.file) {
             imgurl = process.env.APP_URL + "/uploads/" + req.file?.filename;
         }
-
+        const slug = toSlug(title);
         console.log("id", req.body)
 
         // if (!title || icon || !_id) {
@@ -162,7 +164,7 @@ exports.updateAgeGroup = (async (req, res) => {
         //         message: "All fields Required"
         //     })
         // }
-        const ageGroupList = await AgeGroup.findByIdAndUpdate(_id, { title, description, icon, coverImg:imgurl });
+        const ageGroupList = await AgeGroup.findByIdAndUpdate(_id, { slug, title, description, icon, coverImg:imgurl });
         if (!ageGroupList) {
             console.log("agegrouplisy : ",ageGroupList)
             return res.status(200).json({

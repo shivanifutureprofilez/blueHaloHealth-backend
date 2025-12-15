@@ -3,12 +3,15 @@ const mongoose = require("mongoose");
 const serviceSchema = new mongoose.Schema(
   {
     bannerImg: {
-     type: String,
-     required: [true, "Banner Image is Required"],
+      type: String,
+      required: [true, "Banner Image is Required"],
     },
     name: {
       type: String,
       required: [true, "Service name is required"],
+    },
+    slug: {
+      type: String,
     },
     description: {
       type: String,
@@ -31,8 +34,8 @@ const serviceSchema = new mongoose.Schema(
       required: true,
     },
     featured: {
-      type:Number,
-      default:0
+      type: Number,
+      default: 0
     },
     deletedAt: {
       type: Date,

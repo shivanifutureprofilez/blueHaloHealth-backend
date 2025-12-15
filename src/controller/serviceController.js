@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Service = require("../Model/Service");
 const { invalidateByUrl } = require("../middleware/cache");
+const { toSlug } = require("../utils/toSlug");
 
 // exports.addNewService = async (req, res) => {
 //   try {
@@ -48,7 +49,7 @@ exports.addNewService = async (req, res) => {
   try {
     console.log("req.file ", req.body);
     const { title, name, description, content, additionalContent, benefits, bannerImg } = req.body;
-
+    const slug = toSlug(title);
     let imgurl = bannerImg;
     if (req.file) {
       imgurl = process.env.APP_URL + "/uploads/" + req.file?.filename;
@@ -76,6 +77,7 @@ exports.addNewService = async (req, res) => {
       benefits: mappedBenefits,
       agegroup: name,
       bannerImg: imgurl,
+      slug
     });
 
     await newService.save();
@@ -279,6 +281,7 @@ exports.showAllServices = async (req, res) => {
         $project: {
           _id: 1,
           name: 1,
+          slug: 1,
           bannerImg: 1,
           icon: 1,
           description: 1,
@@ -364,7 +367,7 @@ exports.updateService = async (req, res) => {
   try {
     const id = req.params.id;
     const { title, name, bannerImg, description, content, additionalContent, benefits } = req.body;
-
+    const slug = toSlug(title);
     // Validate
     if (!name || !title) {
       return res.status(400).json({
@@ -386,6 +389,7 @@ exports.updateService = async (req, res) => {
       content,
       additionalContent,
       bannerImg,
+      slug,
       benefits: mappedBenefits,
       updatedAt: new Date()
     };
@@ -511,12 +515,12 @@ exports.featureService = async (req, res) => {
 exports.showServiceDetails = async (req, res) => {
   try {
     // await connectDB();
+    console.log("req.params",req.params)
     const id = req.params.id;
-
     const serviceData = await Service.aggregate([
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(id),
+          slug: id,
           deletedAt: null
         }
       },
@@ -532,7 +536,7 @@ exports.showServiceDetails = async (req, res) => {
       {
         $project: {
           _id: 1,
-          // title: 1,
+          slug: 1,
           name: 1,
           description: 1,
           bannerImg: 1,

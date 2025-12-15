@@ -10,6 +10,9 @@ const subServiceSchema = new mongoose.Schema(
       type: String,
       required: [true, "Service name is required"],
     },
+    slug: {
+      type: String,
+    },
     description: {
       type: String,
     },

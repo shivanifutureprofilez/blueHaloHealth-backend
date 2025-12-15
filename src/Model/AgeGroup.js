@@ -6,6 +6,9 @@ const ageGroupSchema = mongoose.Schema({
         type: String,
         required: [true, "Title is required"],
     },
+    slug: {
+        type: String, 
+    },
     description: {
         type: String,
     },
