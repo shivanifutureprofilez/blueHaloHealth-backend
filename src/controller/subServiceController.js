@@ -52,13 +52,13 @@ exports.addNewSubService = async (req, res) => {
 exports.singleSubServiceDetails = async (req, res) => {
   try {
     await connectDB();
-    const id = req.params.id;
+    const {slug} = req.params;
     const subServiceData = await SubService.findOne({
-      slug: id,
+      slug: slug,
     }).populate("service");
 
     if (!subServiceData) {
-      return res.status(404).json({
+      return res.status(200).json({
         status: false,
         message: "Sub Service not found",
       });
@@ -121,14 +121,17 @@ exports.allSubService = (async (req, res) => {
 
 exports.updateSubService = async (req, res) => {
   try {
-    const { id } = req.params;
-    console.log("_id", id);
-    console.log("req.body", req.body);
+    const  slug  = req.params.slug;
+    console.log("slug", slug);
+    const sb = await SubService.findOne({slug:slug});
+    console.log("sb", sb);
+
     const { name, bannerImg, description, content } = req.body;
-    const slug = toSlug(name);
+    const generatedslug = toSlug(name);
+
     const subService = await SubService.findByIdAndUpdate(
-      id,
-      { name, bannerImg, description, content,slug },
+      sb?._id,
+      { name, bannerImg, description, content, slug:generatedslug },
       { new: true }
     );
 
@@ -139,7 +142,7 @@ exports.updateSubService = async (req, res) => {
         message: "Unable To Update Sub-Service"
       });
     }
-    await invalidateByUrl(`/api/subservice/${id}`);
+    await invalidateByUrl(`/api/subservice/${slug}`);
     await invalidateByUrl(`/api/service/${subService?.service}`);
 
     return res.status(200).json({

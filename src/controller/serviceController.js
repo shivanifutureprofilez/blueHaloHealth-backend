@@ -129,12 +129,13 @@ exports.addNewService = async (req, res) => {
 exports.getServicebyId = async (req, res) => {
   try {
     // await connectDB();
-    const id = req.params.id;
+    const {slug} = req.params;
 
     const serviceData = await Service.aggregate([
       {
         $match: {
-          _id: new mongoose.Types.ObjectId(id),
+          // _id: new mongoose.Types.ObjectId(id),
+          slug:slug,
           deletedAt: null
         }
       },
@@ -365,9 +366,10 @@ exports.showAllServices = async (req, res) => {
 
 exports.updateService = async (req, res) => {
   try {
-    const id = req.params.id;
+    const { slug } = req.params;
+    const sb = await Service.findOne({slug});
     const { title, name, bannerImg, description, content, additionalContent, benefits } = req.body;
-    const slug = toSlug(title);
+    const generatedslug = toSlug(title);
     // Validate
     if (!name || !title) {
       return res.status(400).json({
@@ -389,14 +391,14 @@ exports.updateService = async (req, res) => {
       content,
       additionalContent,
       bannerImg,
-      slug,
+      slug:generatedslug,
       benefits: mappedBenefits,
       updatedAt: new Date()
     };
 
     // ⚡ One fast DB operation (no find, no save)
     const updatedService = await Service.findByIdAndUpdate(
-      id,
+      sb?._id,
       { $set: updateData },
       { new: true, lean: true }   // lean = very fast
     );

@@ -6,7 +6,7 @@ const router = require("express").Router();
 
 router.post("/service/add", upload.single("bannerImg"), addNewService);
 // router.post("/service/add",   addNewService);
-router.get('/service/list/:id', getServicebyId);
+router.get('/service/list/:slug', getServicebyId);
 router.get('/service/featured/list', cacheByUrl(300), showFeaturedServices);
 router.get('/service/list', cacheByUrl(300), showAllServices);
 router.post('/service/update/:id',updateService);
