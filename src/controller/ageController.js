@@ -108,6 +108,7 @@ exports.listAgeGroups = async (req, res) => {
                         {
                             $project: {
                                 name: 1,
+                                slug:1
                                 // description: 1,
                                 // icon: 1
                             }
@@ -124,7 +125,8 @@ exports.listAgeGroups = async (req, res) => {
                     icon: 1,
                     services: 1,
                     coverImg: 1,
-                    createdAt: 1
+                    createdAt: 1,
+                    slug:1
                 }
             }
         ]);
