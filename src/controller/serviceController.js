@@ -128,7 +128,6 @@ exports.addNewService = async (req, res) => {
 
 exports.getServicebyId = async (req, res) => {
   try {
-    // await connectDB();
     const {slug} = req.params;
 
     const serviceData = await Service.aggregate([
@@ -372,7 +371,7 @@ exports.updateService = async (req, res) => {
     const generatedslug = toSlug(title);
     // Validate
     if (!name || !title) {
-      return res.status(400).json({
+      return res.status(200).json({
         status: false,
         message: "Name and title are required.",
       });
@@ -404,13 +403,13 @@ exports.updateService = async (req, res) => {
     );
 
     if (!updatedService) {
-      return res.status(404).json({
+      return res.status(200).json({
         status: false,
         message: "Service not found.",
       });
     }
 
-    await invalidateByUrl(`/api/service/${id}`);
+    await invalidateByUrl(`/api/service/${ sb?._id}`);
     await invalidateByUrl('/api/service/list');
     await invalidateByUrl('/api/agegroup/list');
     await invalidateByUrl('/api/service/featured/list');

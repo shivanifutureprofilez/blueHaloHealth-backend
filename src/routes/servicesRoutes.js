@@ -9,7 +9,7 @@ router.post("/service/add", upload.single("bannerImg"), addNewService);
 router.get('/service/list/:slug', getServicebyId);
 router.get('/service/featured/list', cacheByUrl(300), showFeaturedServices);
 router.get('/service/list', cacheByUrl(300), showAllServices);
-router.post('/service/update/:id',updateService);
+router.post('/service/update/:slug',updateService);
 router.get('/service/delete/:id', deleteService);
 router.get('/service/mark/featured/:id', featureService);
 router.get("/service/:id", cacheByUrl(120), showServiceDetails);
