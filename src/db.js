@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 let isConnected = null;
 
-export async function connectDB() {
+const connectDB = async () => {
   if (isConnected) {
     return;
   }
@@ -19,3 +19,7 @@ export async function connectDB() {
     console.log("MongoDB connection error: ", error);
   }
 }
+
+module.exports = {
+  connectDB
+};
